@@ -96,11 +96,13 @@ int main(int argc, char **argv)
     char *bdf_fn = NULL;
     char *charlist_fn = NULL;
     char *srom_fn = NULL;
-    char *f16_fn = NULL;
+    char *jrom_fn = NULL;
+    char *trom_fn = NULL;
+    //char *f16_fn = NULL;
     char *out_fn = "sango2_cht_gen.nes";
 
     int opt = -1;
-    while ((opt = getopt(argc, argv, "b:c:s:f:o:")) != -1) {
+    while ((opt = getopt(argc, argv, "b:c:s:t:j:o:")) != -1) {
         switch (opt) {
         case 'b':
             bdf_fn = optarg;
@@ -111,22 +113,24 @@ int main(int argc, char **argv)
         case 's':
             srom_fn = optarg;
             break;
-        case 'f':
-            f16_fn = optarg;
+        case 't':
+            trom_fn = optarg;
+            break;
+        case 'j':
+            jrom_fn = optarg;
             break;
         case 'o':
             out_fn = optarg;
             break;
         default: /* '?' */
-            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -f TC_16_FONT [-o OUT_FILE]\n",
-                    argv[0]);
+            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [ -j JP_ROM -m MAPPER_NUM -o OUT_FILE]\n", argv[0]);
             exit(EXIT_FAILURE);
         }
     }
 
-    if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL || f16_fn == NULL){
-        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -f TC_16_FONT [-o OUT_FILE]\n", argv[0]);
-        exit(0);
+    if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL || trom_fn == NULL || jrom_fn == NULL){
+        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -p port -o OUT_FILE]\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
     bdf_char *bdf_table = NULL;
@@ -148,7 +152,7 @@ int main(int argc, char **argv)
     FILE *romfp = fopen(srom_fn, "rb");
     if(romfp == NULL){
         printf("open %s failed\n", srom_fn);
-        exit(0);
+        exit(EXIT_FAILURE);
     }
     fread(rom_data, 1, rom_size, romfp);
     fclose(romfp);
@@ -158,13 +162,26 @@ int main(int argc, char **argv)
     rom_data[7] = 0xC0;
 
     // patch 16x16 font
-    romfp = fopen(f16_fn, "rb");
+    romfp = fopen(trom_fn, "rb");
     if(romfp == NULL){
-        printf("open %s failed\n", f16_fn);
-        exit(0);
+        printf("open %s failed\n", trom_fn);
+        exit(EXIT_FAILURE);
     }
+    fseek(romfp, 0x1D810, SEEK_SET);
     fread(rom_data+0x1D810, 1, 0x2800, romfp);
     fclose(romfp);
+
+    // patch CAPCOM title
+    if(jrom_fn != NULL){
+        romfp = fopen(jrom_fn, "rb");
+        if(romfp == NULL){
+            printf("open %s failed\n", jrom_fn);
+            exit(EXIT_FAILURE);
+        }
+        fseek(romfp, 0x37BB0, SEEK_SET);
+        fread(rom_data+0x37BB0, 1, 0x1A0, romfp);
+        fclose(romfp);
+    }
 
     // generate fonts and patch to rom
     FILE *charlist_fp = fopen(charlist_fn, "r");
