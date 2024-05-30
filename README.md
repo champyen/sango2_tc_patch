@@ -1,5 +1,5 @@
-# sango2_tc_patch
-任天堂 吞食天地2 - 諸葛孔明傳 同能網版 正體中文化專案
+
+#吞食天地2 同能網版本 正體中文化
 
 ##正體化流程
 1. 建立 ROM 內用字列表 \
@@ -37,7 +37,12 @@ otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 基本上文字的點是以 raster scan 的次序連續存放在 16 bytes (128b) 中, 比較不直覺的是每個 byte 是從 low bit 到 high bit 的次序存放, 而非 NES 1BPP/2BPP 常見的 high bit to low bit 的次序
 
 ##檔案說明:
-1. source code - Makefile, font_view.c, font16_ext.c, rom_patch.c \
+1. source code
+* Makefile - make project file
+* font_view.c - font viewer
+* font16_ext.c - 16x16 Trad. Chinese font extractor
+* rom_patch.c - ROM patcher
+* bdf_fix.c - BDF font center / fixed size BITMAP
 
 2. 吞食天地2 ROM 檔案
 * 同能網 - sango2_chs.nes
@@ -45,15 +50,17 @@ otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 
 3. 原始字型檔案與其授權
 * [俐方體](https://github.com/ACh-K/Cubic-11) - Cubic_11_1.100_R.ttf, OFL.txt
-* [文泉驛點陣宋體](http://wenq.org/wqy2/index.cgi?BitmapSong) - wqy-bitmapsong/wenquanyi_9pt.pcf, wqy-bitmapsong/COPYING, wqy-bitmapsong/README
-* [縫合像素字體](https://github.com/TakWolf/fusion-pixel-font) - fusion-pixel-11px-monospaced-zh_hant.bdf, LICENSE-OFL
 * [螢火飛點陣新宋](http://www.study-area.org/apt/firefly-font/) - fireflysung.ttf, ARPHICPL.TXT
+* [縫合像素字體](https://github.com/TakWolf/fusion-pixel-font) - fusion-pixel-11px-monospaced-zh_hant.bdf, LICENSE-OFL
+* [Zpix 最像素](https://github.com/SolidZORO/zpix-pixel-font) - zpix.bdf, 非商用免費
+* [文泉驛點陣宋體(版權問題, 請自行產生 ROM)](http://wenq.org/wqy2/index.cgi?BitmapSong) - wqy-bitmapsong/wenquanyi_9pt.pcf, wqy-bitmapsong/COPYING, wqy-bitmapsong/README
 
 4. 預先處理字型檔案
 * cubic11_11_80.bdf - Cubic_11_1.100_R.ttf 轉換編修而成的 BDF 字型
-* wqysong9.bdf - wqy-bitmapsong/wenquanyi_9pt.pcf 轉換編修而成的 BDF 字型
 * fusion-pixel-11px-monospaced-zh_hant.bdf - 編修自 12px BDF 版本
-* fireflysung_11_80.bdf - fireflysung.ttf 轉換編修而成的 BDF 字型
+* fireflyR12.bdf - 原始 fireflyR12.bdf 編修並轉換而成的 BDF 字型
+* zpix.bdf - 由 zpix.bdf 轉換而成的 BDF 字型
+* wqysong9.bdf - wqy-bitmapsong/wenquanyi_9pt.pcf 轉換編修而成的 BDF 字型
 
 ##模擬器推荐
 建議使用 FCEUX or FCEUmm 來遊玩, 主要是人物/物品一多還是會有閃爍的情況\
