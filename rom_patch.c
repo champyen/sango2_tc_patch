@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
-#include <wchar.h>
 #include <sys/stat.h>
 #include <unistd.h>
 
 typedef struct {
-    unsigned char bitmap[22];
+    uint8_t bitmap[22];
 } bdf_char;
 
 long get_file_size(char *filename) {
@@ -19,7 +19,7 @@ long get_file_size(char *filename) {
 
 void disp_CCHAR(bdf_char *table, int char_idx)
 {
-    unsigned char* font = (unsigned char*)(table[char_idx - 0x4E00].bitmap);
+    uint8_t* font = (uint8_t*)(table[char_idx - 0x4E00].bitmap);
     for(int y = 0 ; y < 11; y++){
         for(int x = 0; x < 11; x++){
 
@@ -34,9 +34,9 @@ void disp_CCHAR(bdf_char *table, int char_idx)
     }
 }
 
-void bdf_to_rom(bdf_char *table, int char_idx, unsigned char *dst)
+void bdf_to_rom(bdf_char *table, int char_idx, uint8_t *dst)
 {
-    unsigned char* font = (unsigned char*)(table[char_idx - 0x4E00].bitmap);
+    uint8_t* font = (uint8_t*)(table[char_idx - 0x4E00].bitmap);
     for(int y = 0 ; y < 11; y++){
         for(int x = 0; x < 11; x++){
 
@@ -91,6 +91,65 @@ int parse_bdf(FILE *fp, bdf_char *table)
     return 0;
 }
 
+void replace_words(FILE *fp, uint16_t *u2r, uint8_t *rom_data, int rom_size)
+{
+    int lidx = 1;
+    while(1){
+        uint16_t read_u16;
+        unsigned char orig_str[MAX_LEN];
+        unsigned char rep_str[MAX_LEN];
+        int read_cnt = 0;
+
+        int orig_len = 0;
+        while((read_cnt = fread(&read_u16, 1, sizeof(read_u16), fp)) > 0){
+            if(read_u16 == 0x3A)
+                break;
+            uint16_t rom_char = u2r[read_u16];
+            memcpy(&(orig_str[orig_len]), &rom_char, 2);
+            orig_len += (rom_char < 0xE0 ? 1 : 2);
+        }
+
+        int rep_len = 0;
+        while((read_cnt = fread(&read_u16, 1, sizeof(read_u16), fp)) > 0){
+            if(read_u16 == 0x0A)
+                break;
+            uint16_t rom_char = u2r[read_u16];
+            memcpy(&(rep_str[rep_len]), &rom_char, 2);
+            rep_len += (rom_char < 0xE0 ? 1 : 2);
+        }
+
+        int rep_cnt = 0;
+        if( orig_len == rep_len ) {
+            for(int i = 0; i < rom_size; i++){
+                if(memcmp(rom_data + i, orig_str, orig_len) == 0){
+                    memcpy(rom_data + i, rep_str, rep_len);
+                    i += orig_len;
+                    rep_cnt++;
+                }
+            }
+        } else {
+            printf("str[%d] orig_len[%d] != rep_len[%d]\n", lidx, orig_len, rep_len);
+        }
+        printf("line[%d] replaces %d\n", lidx, rep_cnt);
+        if(rep_cnt == 0){
+            printf("ORIG:");
+            for(int i = 0; i < orig_len; i++){
+                printf("%2X ", orig_str[i]);
+            }
+            printf("\n");
+            printf("REPL:");
+            for(int i = 0; i < rep_len; i++){
+                printf("%2X ", rep_str[i]);
+            }
+            printf("\n");
+        }
+
+        lidx++;
+        if(read_cnt == 0)
+            break;
+    }
+}
+
 int main(int argc, char **argv)
 {
     char *bdf_fn = NULL;
@@ -98,11 +157,11 @@ int main(int argc, char **argv)
     char *srom_fn = NULL;
     char *jrom_fn = NULL;
     char *trom_fn = NULL;
-    //char *f16_fn = NULL;
+    char *rep_fn = NULL;
     char *out_fn = "sango2_cht_gen.nes";
 
     int opt = -1;
-    while ((opt = getopt(argc, argv, "b:c:s:t:j:o:")) != -1) {
+    while ((opt = getopt(argc, argv, "b:c:s:t:j:r:o:")) != -1) {
         switch (opt) {
         case 'b':
             bdf_fn = optarg;
@@ -119,17 +178,20 @@ int main(int argc, char **argv)
         case 'j':
             jrom_fn = optarg;
             break;
+        case 'r':
+            rep_fn = optarg;
+            break;
         case 'o':
             out_fn = optarg;
             break;
         default: /* '?' */
-            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [ -j JP_ROM -m MAPPER_NUM -o OUT_FILE]\n", argv[0]);
+            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [ -j JP_ROM -r REPLACE_LIST -o OUT_FILE]\n", argv[0]);
             exit(EXIT_FAILURE);
         }
     }
 
     if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL || trom_fn == NULL || jrom_fn == NULL){
-        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -p port -o OUT_FILE]\n", argv[0]);
+        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -r REPLACE_LIST -o OUT_FILE]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -146,9 +208,10 @@ int main(int argc, char **argv)
 
     // Test
     disp_CCHAR(bdf_table, 0x749D);
+    disp_CCHAR(bdf_table, 0x5DE6);
 
     long rom_size = get_file_size(srom_fn);
-    unsigned char *rom_data = malloc(rom_size);
+    uint8_t *rom_data = malloc(rom_size);
     FILE *romfp = fopen(srom_fn, "rb");
     if(romfp == NULL){
         printf("open %s failed\n", srom_fn);
@@ -190,6 +253,8 @@ int main(int argc, char **argv)
         exit(0);
     }
     char strbuf[MAX_LEN];
+    uint16_t u16_to_rom[0xA000] = {0};
+    uint16_t rom_to_u16[0xC00] = {0};
     while(fread(strbuf, 1, 16, charlist_fp) == 16){
         //printf("%ls\n",strbuf);
         for(int i =0; i < 7; i++){
@@ -200,21 +265,39 @@ int main(int argc, char **argv)
         long num = strtol(strchr(strbuf, ',')+1, NULL, 16)+1;
         //printf("offset=%lX, num=%ld\n", offset, num);
         for(int i = 0; i < num; i++, offset+=0x10){
-            unsigned short charenc = 0;
-            unsigned char bitmap[16] = {0};
+            uint16_t charenc = 0;
             fread(&charenc, 1, 2, charlist_fp);
-            bdf_to_rom(bdf_table, charenc, bitmap);
-            memcpy(rom_data + offset, bitmap, 16);
-            //printf("%X ", charenc);
+            if(offset >= 0x90910){
+                uint8_t bitmap[16] = {0};
+                bdf_to_rom(bdf_table, charenc, bitmap);
+                memcpy(rom_data + offset, bitmap, 16);
+
+
+                // build rom / utf-16 mapping table
+                uint32_t rom_idx = (offset - 0x90010) >> 4;
+                //rom_to_u16[rom_idx] = charenc;
+                //printf("%X : %X\n", charenc, rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF ));
+                u16_to_rom[charenc] = rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF );
+            }
         }
         fread(strbuf, 1, 2, charlist_fp);
         //printf("\n");
     }
     fclose(charlist_fp);
 
+    if(rep_fn != NULL) {
+        FILE *rep_fp = fopen(rep_fn, "r");
+        if(rep_fp == NULL) {
+            printf("open %s failed\n", rep_fn);
+            exit(0);
+        }
+        replace_words(rep_fp, u16_to_rom, rom_data, rom_size);
+    }
+
     FILE *out_romfp = fopen(out_fn, "wb");
     fwrite(rom_data, 1, rom_size, out_romfp);
     fclose(out_romfp);
 
+    free(rom_data);
     return 0;
 }
