@@ -36,6 +36,27 @@ otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 5. 關於 ROM 當中 11x11 的存放方式 \
 基本上文字的點是以 raster scan 的次序連續存放在 16 bytes (128b) 中, 比較不直覺的是每個 byte 是從 low bit 到 high bit 的次序存放, 而非 NES 1BPP/2BPP 常見的 high bit to low bit 的次序
 
+6. 關於 ROM 當中對白的存放方式 \
+對白的存放位置請參考 [Zeven 大的筆記](https://tiebac.baidu.com/p/4579995248?pn=1) \
+對白的上下位指向的位置存放著對白的資訊, 由文章中可以得知 0xFx 使用為對白命令 \
+在 5. 當中提到的 11x11 文字存放的起始位置為 0x90010 \
+在 0x90010 ~ 0x90E00 對白中是直接透過 1 BYTE (0x00 ~ 0xDF) 來直接取用 \
+在 0x91010 ~ 0x9xxxx 區間的部份, 會透過 2 BYTEs 來取得位值 \
+BYTE 0: 數值範圍 0xE0 ~ 0xEx - 來選擇 0x910F0 ~ 0x9F010 的區間 \
+BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
+那麼如果每個區間的 index 為 0xE0~0xFF(對白中的指令/控制碼), 有可能造成對白上的解讀問題 \
+所以可以觀察到在每段 0x1000 的區間中 0xE00~0xFFF 都不使用, 就不會產生 00
+
+7. 對白修正 \
+透過的檔案是 replace.txt \
+檔案格式為:
+```
+原始字串:替換字串
+```
+ \
+然而要將檔案轉存為 UTF-16LE 才可以使用
+
+
 ##檔案說明:
 1. source code
 * Makefile - make project file
@@ -43,6 +64,7 @@ otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 * font16_ext.c - 16x16 Trad. Chinese font extractor
 * rom_patch.c - ROM patcher
 * bdf_fix.c - BDF font center / fixed size BITMAP
+* msg_dump.c - message dumper
 
 2. 吞食天地2 ROM 檔案
 * 同能網 - sango2_chs.nes
