@@ -253,7 +253,7 @@ int main(int argc, char **argv)
         exit(0);
     }
     char strbuf[MAX_LEN];
-    uint16_t u16_to_rom[0xA000] = {0};
+    uint16_t u16_to_rom[0x10000] = {0};
     uint16_t rom_to_u16[0xC00] = {0};
     while(fread(strbuf, 1, 16, charlist_fp) == 16){
         //printf("%ls\n",strbuf);
@@ -271,14 +271,12 @@ int main(int argc, char **argv)
                 uint8_t bitmap[16] = {0};
                 bdf_to_rom(bdf_table, charenc, bitmap);
                 memcpy(rom_data + offset, bitmap, 16);
-
-
-                // build rom / utf-16 mapping table
-                uint32_t rom_idx = (offset - 0x90010) >> 4;
-                //rom_to_u16[rom_idx] = charenc;
-                //printf("%X : %X\n", charenc, rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF ));
-                u16_to_rom[charenc] = rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF );
             }
+            // build rom / utf-16 mapping table
+            uint32_t rom_idx = (offset - 0x90010) >> 4;
+            //rom_to_u16[rom_idx] = charenc;
+            u16_to_rom[charenc] = rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF );
+            //printf("%X : %X\n", charenc, rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF ));
         }
         fread(strbuf, 1, 2, charlist_fp);
         //printf("\n");
