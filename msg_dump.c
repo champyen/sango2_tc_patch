@@ -78,6 +78,10 @@ int main(int argc, char ** argv)
     dump_msg("msg2.txt", rom_data, char_table, 0x58410, 0x592D8);
     dump_msg("msg3.txt", rom_data, char_table, 0x5C410, 0x5D51B);
     dump_msg("msg4.txt", rom_data, char_table, 0x60410, 0x61BF6);
+    dump_msg("msg5.txt", rom_data, char_table, 0x80410, 0x81185);
+    dump_msg("msg6.txt", rom_data, char_table, 0x84410, 0x86E1B);
+    dump_msg("msg7.txt", rom_data, char_table, 0x88410, 0x8A0D5);
+    dump_msg("msg8.txt", rom_data, char_table, 0x8C410, 0x8D779);
 
     free(rom_data);
     return 0;

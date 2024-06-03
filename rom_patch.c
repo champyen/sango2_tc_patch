@@ -91,6 +91,24 @@ int parse_bdf(FILE *fp, bdf_char *table)
     return 0;
 }
 
+#define SEG_CHK(s, e, l) (ofs >= s && ofs < e - l)
+int addr_san(int ofs, int len){
+    if(
+         SEG_CHK(0x54410, 0x56C10, len) ||
+         SEG_CHK(0x58410, 0x592D8, len) ||
+         SEG_CHK(0x5C410, 0x5D51B, len) ||
+         SEG_CHK(0x60410, 0x61BF6, len) ||
+         SEG_CHK(0x80410, 0x81185, len) ||
+         SEG_CHK(0x84410, 0x86E1B, len) ||
+         SEG_CHK(0x88410, 0x8A0D5, len) ||
+         SEG_CHK(0x8C410, 0x8D779, len)
+    ){
+        return 1;
+    }
+
+    return 0;
+}
+
 void replace_words(FILE *fp, uint16_t *u2r, uint8_t *rom_data, int rom_size)
 {
     int lidx = 1;
@@ -121,12 +139,14 @@ void replace_words(FILE *fp, uint16_t *u2r, uint8_t *rom_data, int rom_size)
         int rep_cnt = 0;
         if( orig_len == rep_len ) {
             for(int i = 0; i < rom_size; i++){
-                if(memcmp(rom_data + i, orig_str, orig_len) == 0){
+                if((memcmp(rom_data + i, orig_str, orig_len) == 0)){
+                    printf("0x%05X:%d ", i, addr_san(i, rep_len));
                     memcpy(rom_data + i, rep_str, rep_len);
                     i += orig_len;
                     rep_cnt++;
                 }
             }
+            printf("\n");
         } else {
             printf("str[%d] orig_len[%d] != rep_len[%d]\n", lidx, orig_len, rep_len);
         }
@@ -207,8 +227,8 @@ int main(int argc, char **argv)
     fclose(bdf_fp);
 
     // Test
-    disp_CCHAR(bdf_table, 0x749D);
-    disp_CCHAR(bdf_table, 0x5DE6);
+    disp_CCHAR(bdf_table, 0x5F67);
+    disp_CCHAR(bdf_table, 0x8A61);
 
     long rom_size = get_file_size(srom_fn);
     uint8_t *rom_data = malloc(rom_size);
