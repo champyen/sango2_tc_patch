@@ -1,5 +1,5 @@
 
-吞食天地2 同能網版本 正體中文化專案
+#吞食天地2 同能網版本 正體中文化
 
 ##正體化流程
 1. 建立 ROM 內用字列表 \
@@ -44,8 +44,21 @@ otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 在 0x91010 ~ 0x9xxxx 區間的部份, 會透過 2 BYTEs 來取得位值 \
 BYTE 0: 數值範圍 0xE0 ~ 0xEx - 來選擇 0x910F0 ~ 0x9F010 的區間 \
 BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
-那麼如果每個區間的 BYTE 1 的數值為 0xE0 ~ 0xFF(對白中的指令/控制碼), 有可能造成對白上的解讀問題 \
-所以可以觀察到在每段 0x1000 的區間中 0xE00~0xFFF 都沒有被使用, 就不會產生 00
+那麼如果每個區間的 index 為 0xE0~0xFF(對白中的指令/控制碼), 有可能造成對白上的解讀問題 \
+所以可以觀察到在每段 0x1000 的區間中 0xE00~0xFFF 都不使用, 就不會產生 00 \
+以下為主要對白存放位置: \
+* 劇情對白: \
+第一部份 0x54410 ~ 0x56C10 \
+第二部份 0x58410 ~ 0x592D8 \
+第三部份 0x5C410 ~ 0x5D51B \
+第四部份 0x60410 ~ 0x61BF6
+* 戰鬥對白 \
+第一部份 0x80410 ~ 0x81185 \
+第二部份 0x84410 ~ 0x86E1B \
+第三部份 0x88410 ~ 0x8A0D5 \
+第四部份 0x8C410 ~ 0x8D779 \
+* 請求標注錯誤/錯字 \
+[勘誤表](https://docs.google.com/document/d/1Ga5bjhNSFV82Rp__QZR9QA0ZneSdsQ9bGlqZIzhtepE/edit)
 
 7. 對白修正 \
 透過的檔案是 replace.txt \
@@ -88,13 +101,3 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 建議使用 FCEUX or FCEUmm 來遊玩, 主要是人物/物品一多還是會有閃爍的情況\
 使用 FCEUX/FCEUmm 能夠使用 PPU 超頻功能, 開啟的方式為:\
 選單 Options > Timing Configurations > Overclocking 請勾選, 並在 Vblank Scanlines 數值填入 2
-
-#字型效果 \
-俐方體11號\
-![俐方體11號](./fonts_img/sango2_cht_cubic.png)\
-縫合怪字型\
-![縫合怪字型](./fonts_img/sango2_cht_fusion.png)\
-螢火飛宋體\
-![螢火飛宋體](./fonts_img/sango2_cht_fireflyR12.png)\
-最像素\
-![最像素](./fonts_img/sango2_cht_zpix.png)

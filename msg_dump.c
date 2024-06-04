@@ -25,7 +25,14 @@ void dump_msg(char *msg_fn, uint8_t *rom_data, uint16_t *char_table, int start_o
             int tab_ofs = ((msg - 0xDF) << 8) | rom_data[++i];
             fwrite(&(char_table[tab_ofs]), 1, sizeof(short), msg_fp);
         } else {
-            // CMD
+            uint16_t new_line;
+            if(msg == 0xFF) {
+                new_line = 0x0A;
+                fwrite(&new_line, 1, sizeof(short), msg_fp);
+            } else {
+                new_line = 0x20;
+                fwrite(&new_line, 1, sizeof(short), msg_fp);
+            }
         }
     }
     fclose(msg_fp);
