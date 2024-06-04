@@ -46,7 +46,7 @@ BYTE 0: 數值範圍 0xE0 ~ 0xEx - 來選擇 0x910F0 ~ 0x9F010 的區間 \
 BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 那麼如果每個區間的 index 為 0xE0 ~ 0xFF(對白中的指令/控制碼), 有可能造成對白上的解讀問題 \
 所以可以觀察到在每段 0x1000 的區間中 0xE00~0xFFF 都不使用, 就不會產生 00 \
-以下為主要對白存放位置: \
+以下為主要對白存放位置:
 * 劇情對白: \
 第一部份 0x54410 ~ 0x56C10 \
 第二部份 0x58410 ~ 0x592D8 \
@@ -101,3 +101,13 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 建議使用 FCEUX or FCEUmm 來遊玩, 主要是人物/物品一多還是會有閃爍的情況\
 使用 FCEUX/FCEUmm 能夠使用 PPU 超頻功能, 開啟的方式為:\
 選單 Options > Timing Configurations > Overclocking 請勾選, 並在 Vblank Scanlines 數值填入 2
+
+#字型效果 \
+俐方體11號\
+![俐方體11號](./fonts_img/sango2_cht_cubic.png)\
+縫合怪字型\
+![縫合怪字型](./fonts_img/sango2_cht_fusion.png)\
+螢火飛宋體\
+![螢火飛宋體](./fonts_img/sango2_cht_fireflyR12.png)\
+最像素\
+![最像素](./fonts_img/sango2_cht_zpix.png)
