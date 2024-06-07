@@ -1,6 +1,6 @@
 CC=gcc
 
-all: font_view font16_ext rom_patch bdf_fix msg_dump
+all: font_view font16_ext rom_patch bdf_fix msg_dump bdf_fix bdf16_fix
 
 roms: sango2_cht_zpix.nes sango2_cht_cubic.nes sango2_cht_fusion.nes sango2_cht_fireflyR12.nes sango2_cht_wqy.nes
 
@@ -13,9 +13,12 @@ font16_ext: font16_ext.c
 	$(CC) -o $@ $^
 
 rom_patch: rom_patch.c
-	$(CC) -o $@ $^
+	$(CC) -g -o $@ $^
 
 bdf_fix: bdf_fix.c
+	$(CC) -o $@ $^
+
+bdf16_fix: bdf16_fix.c
 	$(CC) -o $@ $^
 
 msg_dump: msg_dump.c
