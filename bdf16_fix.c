@@ -46,7 +46,7 @@ int bdf_fix(FILE *fp_in, FILE *fp_out)
             }
             int pre_y = (16 - h) /2;
             int post_y = pre_y;
-            post_y += 16 - (h + pre_y + post_y);
+            pre_y += 16 - (h + pre_y + post_y);
 
             int shift_R = w <= 8 ? 8 : 0;
             int shift_L = (16 - w) / 2;

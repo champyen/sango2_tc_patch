@@ -9,6 +9,42 @@ typedef struct {
     uint8_t bitmap[32];
 } bdf_char;
 
+enum {
+    FONT_UTF16 = 0,
+    FONT_BIG5 = 1,
+} font_encoding;
+
+typedef struct {
+    bdf_char *table;
+    int encoding;
+    int size;
+    int start;
+    int end;
+} bdf_font;
+
+void font_init(bdf_font *fnt, int enc, int size)
+{
+    fnt->encoding = enc;
+    fnt->size = size;
+    fnt->table = (bdf_char*)calloc(1, sizeof(bdf_char)*(0x8000));
+    switch(enc){
+        case FONT_BIG5:
+            fnt->start = 0x8140;
+            fnt->end = 0xF9D5;
+            break;
+        case FONT_UTF16:
+        default:
+            fnt->start = 0x4E00;
+            fnt->end = 0x9FFF;
+    }
+}
+
+void font_release(bdf_font fnt)
+{
+    if(fnt.table)
+        free(fnt.table);
+}
+
 long get_file_size(char *filename) {
     struct stat file_status;
     if (stat(filename, &file_status) < 0) {
@@ -17,9 +53,10 @@ long get_file_size(char *filename) {
     return file_status.st_size;
 }
 
-void disp_CCHAR(bdf_char *table, int char_idx)
+void disp_CCHAR(bdf_font fnt, int char_idx)
 {
-    uint8_t* font = (uint8_t*)(table[char_idx - 0x4E00].bitmap);
+    bdf_char *table = fnt.table;
+    uint8_t* font = (uint8_t*)(table[char_idx - fnt.start].bitmap);
     for(int y = 0 ; y < 11; y++){
         for(int x = 0; x < 11; x++){
 
@@ -34,9 +71,10 @@ void disp_CCHAR(bdf_char *table, int char_idx)
     }
 }
 
-void disp_C16CHAR(bdf_char *table, int char_idx)
+void disp_C16CHAR(bdf_font fnt, int char_idx)
 {
-    uint8_t* font = (uint8_t*)(table[char_idx - 0x8140].bitmap);
+    bdf_char *table = fnt.table;
+    uint8_t* font = (uint8_t*)(table[char_idx - fnt.start].bitmap);
     for(int y = 0 ; y < 16; y++){
         for(int x = 0; x < 16; x++){
             int fidx = y*2 + x/8;
@@ -49,9 +87,10 @@ void disp_C16CHAR(bdf_char *table, int char_idx)
     }
 }
 
-void bdf_to_rom(bdf_char *table, int char_idx, uint8_t *dst)
+void bdf_to_rom(bdf_font fnt, int char_idx, uint8_t *dst)
 {
-    uint8_t* font = (uint8_t*)(table[char_idx - 0x4E00].bitmap);
+    bdf_char *table = fnt.table;
+    uint8_t* font = (uint8_t*)(table[char_idx - fnt.start].bitmap);
     for(int y = 0 ; y < 11; y++){
         for(int x = 0; x < 11; x++){
 
@@ -68,9 +107,10 @@ void bdf_to_rom(bdf_char *table, int char_idx, uint8_t *dst)
     }
 }
 
-void bdf16_to_rom(bdf_char *table, int char_idx, uint8_t *dst)
+void bdf16_to_rom(bdf_font fnt, int char_idx, uint8_t *dst)
 {
-    uint8_t* font = (uint8_t*)(table[char_idx-0x8140].bitmap);
+    bdf_char *table = fnt.table;
+    uint8_t* font = (uint8_t*)(table[char_idx - fnt.start].bitmap);
     for(int y = 0 ; y < 16; y++){
         int didx_0 = y;
         int didx_1 = didx_0 + 16;
@@ -80,23 +120,19 @@ void bdf16_to_rom(bdf_char *table, int char_idx, uint8_t *dst)
 }
 
 #define MAX_LEN 1024
-int parse_bdf(FILE *fp, bdf_char *table, int size, int is_utf16)
+bdf_font parse_bdf(FILE *fp, int enc, int size)
 {
+    bdf_font fnt;
+    font_init(&fnt, enc, size);
     char strbuf[MAX_LEN];
     while(1){
         long char_idx = 0;
         char *ptr = NULL;
         while((ptr = fgets(strbuf, MAX_LEN, fp)) != NULL){
-            if(is_utf16 && strstr(strbuf, "STARTCHAR")){
-                char *idx_p = &(strbuf[10]);
-                char_idx = strtol(idx_p, NULL, 16);
-                if(char_idx >= 0x4E00 && char_idx < 0xA000){
-                    break;
-                }
-            } else if(!is_utf16 && strstr(strbuf, "ENCODING")){
+            if(strstr(strbuf, "ENCODING")){
                 char *idx_p = &(strbuf[9]);
                 char_idx = strtol(idx_p, NULL, 10);
-                if(char_idx >= 0x8140 && char_idx < 0xF9D5){
+                if(char_idx >= fnt.start && char_idx <= fnt.end){
                     break;
                 }
             }
@@ -111,13 +147,14 @@ int parse_bdf(FILE *fp, bdf_char *table, int size, int is_utf16)
                     break;
                 }
             }
-            uint32_t tab_idx = is_utf16 ? char_idx - 0x4E00 : char_idx - 0x8140;
-            if(tab_idx < 0xF600-0x8140){
+            uint32_t tab_idx = char_idx - fnt.start;
+            bdf_char *table = fnt.table;
+            if(tab_idx < 0x8000){
                 for(int y = 0; y < size; y++){
                     fgets(strbuf, MAX_LEN, fp);
                     int char_line = strtol(strbuf, NULL, 16);
-                        table[tab_idx].bitmap[y*2] = (char_line >> 8) & 0xFF;
-                        table[tab_idx].bitmap[y*2+1] = char_line & 0xFF;
+                    table[tab_idx].bitmap[y*2] = (char_line >> 8) & 0xFF;
+                    table[tab_idx].bitmap[y*2+1] = char_line & 0xFF;
                 }
             }else{
                 printf("strange idx %X [%lX]\n", tab_idx, char_idx);
@@ -125,7 +162,7 @@ int parse_bdf(FILE *fp, bdf_char *table, int size, int is_utf16)
         }
     }
 
-    return 0;
+    return fnt;
 }
 
 #define SEG_CHK(s, e, l) (ofs >= s && ofs < e - l)
@@ -215,7 +252,6 @@ int main(int argc, char **argv)
     char *charlist_fn = NULL;
     char *srom_fn = NULL;
     char *jrom_fn = NULL;
-    char *trom_fn = NULL;
     char *rep_fn = NULL;
     char *out_fn = "sango2_cht_gen.nes";
 
@@ -237,9 +273,6 @@ int main(int argc, char **argv)
         case 's':
             srom_fn = optarg;
             break;
-        case 't':
-            trom_fn = optarg;
-            break;
         case 'j':
             jrom_fn = optarg;
             break;
@@ -255,38 +288,53 @@ int main(int argc, char **argv)
         }
     }
 
-    if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL || trom_fn == NULL || jrom_fn == NULL){
+    if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL){
         printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -r REPLACE_LIST -o OUT_FILE]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
-    bdf_char *bdf_table = NULL;
-    bdf_table = (bdf_char*)calloc(1, sizeof(bdf_char)*(0xA000 - 0x4E00));
+
+    //bdf_char *bdf_table = NULL;
+    //bdf_table = (bdf_char*)calloc(1, sizeof(bdf_char)*(0xA000 - 0x4E00));
     FILE *bdf_fp = fopen(bdf_fn, "r");
     if(bdf_fp == NULL){
         printf("open %s failed\n", bdf_fn);
         exit(0);
     }
     printf("parsing %s\n", bdf_fn);
-    parse_bdf(bdf_fp, bdf_table, 11, 1);
+    bdf_font fnt_11 = parse_bdf(bdf_fp, FONT_UTF16, 11);
     fclose(bdf_fp);
 
-    bdf_char *bdf16_table = NULL;
-    bdf16_table = (bdf_char*)calloc(1, sizeof(bdf_char)*(0xF600 - 0x8140));
+    //bdf_char *bdf16_table = NULL;
+    //bdf16_table = (bdf_char*)calloc(1, sizeof(bdf_char)*(0xFA00 - 0x8140));
     FILE *bdf16_fp = fopen(bdf16_fn, "r");
     if(bdf16_fp == NULL){
         printf("open %s failed\n", bdf16_fn);
         exit(0);
     }
     printf("parsing %s\n", bdf16_fn);
-    parse_bdf(bdf16_fp, bdf16_table, 16, 0);
+
+// by default, we make use of kc15f or taipei16 BIG5 fonts,  glyphs look better
+#define BIG5_16X16 1
+#if BIG5_16X16
+    bdf_font fnt_16 = parse_bdf(bdf16_fp, FONT_BIG5, 16);
+#else
+// we can also make use of fireflyR16 or unifont UTF-16 fonts
+    bdf_font fnt_16 = parse_bdf(bdf16_fp, FONT_UTF16, 16);
+#endif
     fclose(bdf16_fp);
 
     // Test
-    disp_CCHAR(bdf_table, 0x5F67);
-    disp_CCHAR(bdf_table, 0x8A61);
+    disp_CCHAR(fnt_11, 0x5F67);
+    disp_CCHAR(fnt_11, 0x8A61);
 
-    disp_C16CHAR(bdf16_table, 0xBC42);
+
+#if BIG5_16X16
+    disp_C16CHAR(fnt_16, 0xBC42);
+#else
+    disp_C16CHAR(fnt_16, 0x5F67);
+    disp_C16CHAR(fnt_16, 0x8A61);
+#endif
 
     long rom_size = get_file_size(srom_fn);
     uint8_t *rom_data = malloc(rom_size);
@@ -302,17 +350,8 @@ int main(int argc, char **argv)
     rom_data[6] = 0x63;
     rom_data[7] = 0xC0;
 
-    // patch 16x16 font
-#if 0
-    romfp = fopen(trom_fn, "rb");
-    if(romfp == NULL){
-        printf("open %s failed\n", trom_fn);
-        exit(EXIT_FAILURE);
-    }
-    fseek(romfp, 0x1D810, SEEK_SET);
-    fread(rom_data+0x1D810, 1, 0x2800, romfp);
-    fclose(romfp);
-#endif
+    // fix Lu-Mon's name
+    rom_data[0x6FAAE] = 0xA2;
 
     // patch CAPCOM title
     if(jrom_fn != NULL){
@@ -332,59 +371,80 @@ int main(int argc, char **argv)
         printf("open %s failed\n", charlist_fn);
         exit(0);
     }
-    char strbuf[MAX_LEN];
+    uint8_t strbuf[MAX_LEN];
     uint16_t u16_to_rom[0x10000] = {0};
     while(fread(strbuf, 1, 16, charlist_fp) == 16){
-        //printf("%ls\n",strbuf);
         for(int i =0; i < 7; i++){
             strbuf[i] = strbuf[2*i];
         }
         strbuf[8] = 0;
-        long offset = strtol(strbuf, NULL, 16);
-        long num = strtol(strchr(strbuf, ',')+1, NULL, 16)+1;
+        long offset = strtol((char*)strbuf, NULL, 16);
+        long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
         for(int i = 0; i < num; i++, offset+=0x10){
             uint16_t charenc = 0;
             fread(&charenc, 1, 2, charlist_fp);
             if(offset >= 0x90910){
                 uint8_t bitmap[16] = {0};
-                bdf_to_rom(bdf_table, charenc, bitmap);
+                bdf_to_rom(fnt_11, charenc, bitmap);
                 memcpy(rom_data + offset, bitmap, 16);
             }
             // build rom / utf-16 mapping table
             uint32_t rom_idx = (offset - 0x90010) >> 4;
-            //rom_to_u16[rom_idx] = charenc;
             u16_to_rom[charenc] = rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF );
-            //printf("%X : %X\n", charenc, rom_idx < 0x100 ? rom_idx : ((rom_idx & 0xFF) << 8) | ((rom_idx >> 8) + 0xDF ));
         }
         fread(strbuf, 1, 2, charlist_fp);
-        //printf("\n");
     }
     fclose(charlist_fp);
 
-    charlist_fp = fopen(large_charlist_fn, "r");
-    if(charlist_fp == NULL){
-        printf("open %s failed\n", charlist_fn);
-        exit(0);
-    }
-    char *ptr = NULL;
-    while((ptr = fgets(strbuf, MAX_LEN, charlist_fp)) != NULL){
-        //printf("%ls\n",strbuf);
-        long offset = strtol(strbuf, NULL, 16);
-        long num = strtol(strchr(strbuf, ',')+1, NULL, 16)+1;
-        printf("offset=%lX, num=%ld\n", offset, num);
-        fgets(strbuf, MAX_LEN, charlist_fp);
-        for(int i = 0; i < num; i++, offset+=0x20){
-            uint16_t charenc = 0;
-            //fread(&charenc, 1, 2, charlist_fp);
-            charenc = strbuf[i*2] << 8 | strbuf[i*2+1];
-            printf("enc:%X: %lX\n", charenc, offset);
-            uint8_t bitmap[32] = {0};
-            bdf16_to_rom(bdf16_table, charenc, bitmap);
-            memcpy(rom_data + offset, bitmap, 32);
+    // patch 16x16 font
+    if(large_charlist_fn != NULL) {
+        charlist_fp = fopen(large_charlist_fn, "r");
+        if(charlist_fp == NULL){
+            printf("open %s failed\n", charlist_fn);
+            exit(0);
         }
-        //printf("\n");
+#if BIG5_16X16
+        char *ptr = NULL;
+        while((ptr = fgets((char*)strbuf, MAX_LEN, charlist_fp)) != NULL){
+            //printf("%ls\n",strbuf);
+            long offset = strtol((char*)strbuf, NULL, 16);
+            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
+            //printf("offset=%lX, num=%ld\n", offset, num);
+            fgets((char*)strbuf, MAX_LEN, charlist_fp);
+            for(int i = 0; i < num; i++, offset+=0x20){
+                uint16_t charenc = 0;
+                charenc = strbuf[i*2] << 8 | strbuf[i*2+1];
+                //printf("enc:%X: %lX\n", charenc, offset);
+                uint8_t bitmap[32] = {0};
+                bdf16_to_rom(fnt_16, charenc, bitmap);
+                memcpy(rom_data + offset, bitmap, 32);
+            }
+            //printf("\n");
+        }
+#else
+        while(fread(strbuf, 1, 16, charlist_fp) == 16){
+            for(int i =0; i < 7; i++){
+                strbuf[i] = strbuf[2*i];
+            }
+            strbuf[8] = 0;
+            long offset = strtol((char*)strbuf, NULL, 16);
+            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
+            printf("offset=%lX, num=%ld\n", offset, num);
+            for(int i = 0; i < num; i++, offset+=0x20){
+                uint16_t charenc = 0;
+                fread(&charenc, 1, 2, charlist_fp);
+
+                printf("enc:%X: %lX\n", charenc, offset);
+                uint8_t bitmap[32] = {0};
+                bdf16_to_rom(fnt_16, charenc, bitmap);
+                memcpy(rom_data + offset, bitmap, 32);
+            }
+            fread(strbuf, 1, 2, charlist_fp);
+            //printf("\n");
+        }
+#endif
+        fclose(charlist_fp);
     }
-    fclose(charlist_fp);
 
     if(rep_fn != NULL) {
         FILE *rep_fp = fopen(rep_fn, "r");
@@ -400,6 +460,7 @@ int main(int argc, char **argv)
     fclose(out_romfp);
 
     free(rom_data);
-    free(bdf_table);
+    font_release(fnt_11);
+    font_release(fnt_16);
     return 0;
 }
