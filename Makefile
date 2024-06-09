@@ -52,7 +52,7 @@ replace_u16.txt: replace.txt
 
 large_char_list_big5.txt: large_char_list.txt
 	iconv -f UTF-8 -t BIG5 $< > $@
-
+	iconv -f UTF-8 -t UTF-16LE $< > large_char_list_u16.txt
 
 clean:
 	rm -f font_view font16_ext rom_patch bdf_fix msg_dump
@@ -61,4 +61,4 @@ clean_roms:
 	rm -f sango2_cht_zpix.nes sango2_cht_cubic.nes sango2_cht_fusion.nes sango2_cht_fireflyR12.nes sango2_cht_wqy.nes
 
 clean_tabs:
-	rm -f char_list_u16.txt replace_u16.txt
+	rm -f char_list_u16.txt replace_u16.txt large_char_list_big5.txt
