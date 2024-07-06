@@ -26,7 +26,7 @@ otf2bdf Cubic_11_1.100_R.ttf -p 11 -r 80 -o cubic11_11_80.bdf \
 otf2bdf fireflysung.ttf -p 11 -r 80 -o firefly_11_80.bdf \
 [pcf2bdf](https://github.com/ganaware/pcf2bdf) -o wqysong9.bdf wqy-bitmapsong/wenquanyi_9pt.pcf
 
-3. 從著名的 "豪華中文版" 擷取 16x16 中文字型, 位置在 0x1D810 ~ 0x20010 之間
+3. 產生 16x16 字型, 位置在 0x1D810 ~ 0x20010 之間
 
 4. (optional) 從日版擷取 CAPCOM 起始畫面
 
@@ -111,3 +111,13 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 ![螢火飛宋體](./fonts_img/sango2_cht_fireflyR12.png)\
 最像素\
 ![最像素](./fonts_img/sango2_cht_zpix.png)
+
+#特別感謝字詞校正 \
+EdgeHwang (ptt) \
+protect6090 (ptt) \
+jizang (ptt) \
+呂礎 \
+Nijop0423 \
+Shouhwei Li \
+Pi Li \
+匿名

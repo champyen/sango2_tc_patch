@@ -326,7 +326,7 @@ int main(int argc, char **argv)
 
     // Test
     disp_CCHAR(fnt_11, 0x5F67);
-    disp_CCHAR(fnt_11, 0x8A61);
+    disp_CCHAR(fnt_11, 0x5DB2);
 
 
 #if BIG5_16X16
