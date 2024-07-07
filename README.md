@@ -1,7 +1,7 @@
 
-#吞食天地2 同能網版本 正體中文化
+# 吞食天地2 同能網版本 正體中文化
 
-##正體化流程
+## 正體化流程
 1. 建立 ROM 內用字列表 \
 透過 font_view.c 觀察 0x90910 ~ 0x99010 間存放的字 \
 存檔為 char_list.txt \
@@ -70,7 +70,7 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 然而要將檔案轉存為 UTF-16LE 才可以使用
 
 
-##檔案說明:
+## 檔案說明:
 1. source code
 * Makefile - make project file
 * font_view.c - font viewer
@@ -97,12 +97,12 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 * zpix.bdf - 由 zpix.bdf 轉換而成的 BDF 字型
 * wqysong9.bdf - wqy-bitmapsong/wenquanyi_9pt.pcf 轉換編修而成的 BDF 字型
 
-##模擬器推荐
+## 模擬器推荐
 建議使用 FCEUX or FCEUmm 來遊玩, 主要是人物/物品一多還是會有閃爍的情況\
 使用 FCEUX/FCEUmm 能夠使用 PPU 超頻功能, 開啟的方式為:\
 選單 Options > Timing Configurations > Overclocking 請勾選, 並在 Vblank Scanlines 數值填入 2
 
-#字型效果 \
+# 字型效果
 俐方體11號\
 ![俐方體11號](./fonts_img/sango2_cht_cubic.png)\
 縫合怪字型\
@@ -112,10 +112,10 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 最像素\
 ![最像素](./fonts_img/sango2_cht_zpix.png)
 
-#特別感謝字詞校正 \
+# 特別感謝字詞校正
 EdgeHwang (ptt) \
 protect6090 (ptt) \
-jizang (ptt) \
+jizang (ptt) \若再來 
 呂礎 \
 Nijop0423 \
 Shouhwei Li \
