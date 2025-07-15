@@ -112,10 +112,14 @@ BYTE 1: 數值範圍 0x00 ~ 0xDF - 來選擇 0x9x010 ~ 0x9xE00 存放字 \
 最像素\
 ![最像素](./fonts_img/sango2_cht_zpix.png)
 
+# 20250715
+更新ROM 檔案, 改採用中文數字取代羅馬數字\
+主要臨摹自[全小素](https://www.maoken.com/freefonts/15806.html)與[精品點陣體8x8](https://cjkfonts.io/item/boutiquebitmap8x8)
+
 # 特別感謝字詞校正
 EdgeHwang (ptt) \
 protect6090 (ptt) \
-jizang (ptt) \若再來 
+jizang (ptt) \
 呂礎 \
 Nijop0423 \
 Shouhwei Li \
