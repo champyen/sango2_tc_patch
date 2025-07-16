@@ -1,0 +1,422 @@
+$Id: Dou_CREDIT Rev. 0 2006/5/19 20:20:20 qianqianfang Exp$
+
+========================================================== 
+
+               Wen Quan Yi Bitmap Song 
+
+               Contributors and Credits
+
+----------------------------------------------------------
+Email confusers:
+   replace " #" to "@" , replace " _" to "."
+----------------------------------------------------------
+
+Table of Content
+
+ I.  Pevious Work
+ II. WenQuanYi Bitmap Font developers
+ III. Author List for Job Partitions
+ IV. Other resources
+
+----------------------------------------------------------
+
+ I. Previous Work:
+
+   firefly           firefly #firefly _idv _tw
+                     for contributing multi-size Big5/GB2312 glyphs
+                     http://www.study-area.org/apt/firefly-font/
+
+   The Institute of Software,Academia Sinica
+                     for contributing 12pt GB2312 glyphs
+                     http://cvsweb.xfree86.org/cvsweb/xc/fonts/bdf/misc/gb16fs.bdf
+
+   HabianCJK Project for contributing the remaining 12pt GBK glyphs
+                     http://wakaba-web.hp.infoseek.co.jp/hcjk/
+
+   Unifont Project   Roman Czyborra (roman #czyborra _com)
+                     David Starner  (dvdeug #debian _org)
+                     contributed 12pt Korean glyphs
+                     http://czyborra.com/unifont/
+
+   Hanterm Project   Hangul glyphs (U+AC00~U+D7A3) come from
+                     -KAIST-Gothic-Medium-R-Normal--16-160-75-75-C-160-JOHABSH-1
+	             from Hanterm 3.x 
+                     http://elf.kaist.ac.kr/hanterm
+
+----------------------------------------------------------
+
+ II .WenQuanYi Bitmap Font developers
+
+1. Core members
+
+   Qianqian Fang[FangQ] (fangq #nmr _mgh _harvard _edu)
+
+                     project creator and maintainer, wiki development,
+                     web master, offline tool programming, release manager,
+                     major developer, reviewer
+                     http://bbs.dartmouth.edu/~fangq/blog/
+
+   Hong Wang[hotcat]*    (hongclean #gmail _com)
+
+                     key contributor, major reviewer
+                     http://www.hongclean.net/blog/index.php
+
+   Qian Cai[caiqian]*    (caiqian #gmail _com)
+
+                     creator of WenQuanYi bitmap font standard
+
+   Funda Wang[fundawang]*(fundawang #linux _net _cn)
+
+                     key developer, technical support
+                     http://my.opera.com/fundawang/
+
+   Kefu Chai[tchaikov]    (tchaikov #sjtu _edu _cn)
+
+                     web development, major reviewer
+
+   Jinming Liu[ailantian]*(ailantian #email _jlu _edu _cn)
+
+                     key developer for vector Chinese project
+                     http://ailantian.blogchina.com
+
+   Haitao Han[niqiu]*     (chenniqiu #gmail _com)
+
+                     key developer for vector Chinese project
+                     http://www.livejournal.com/~niqiu/
+
+   Qing Lie[fiag]*        (fiag.hit #gmail _com)
+
+                     key developer for vector Chinese project
+
+   * the status is inactive
+
+
+2. Team B members
+
+   activeion   (jizh #cnst _pku _edu _cn)
+   amadeoh     (zh217 #cam _ac _uk)
+   BabyPBC     (babypbc #etang _com)           [Baochuan Pang]
+   BenBear     (cxj26424 #163 _com)            [Xiongjie Chen]
+   brep        (brep #163 _com)
+   chaoslawful (wangxz00 #mails _tsinghua _edu _cn) [Xiaozhe Wang]
+   DannyZeng
+   farm        (wifarm #gmail _com)            [Xiaoguang Wu] 
+   keykeen     (kaleasy #21cn _com)
+   liyi        (liyi79 #gmail _com)            [Yi Li]
+   lucifer     (xinjibo #163 _com)             [Jibo Xin]
+   nilarcs     (nilarcs #163 _com)             [Jun Zhang]
+   pangwa      (pangwa #gmail _com)            [Guang Han]
+   pathfinder  (pathfinder_name #hotmail _com) [Wei Yao]
+   pinker      (pinker #pku _edu _cn) 
+   PONY        (yangxcmail-linux #yahoo _com _cn)
+   pupilzeng   
+   shhky       
+   stid        xuxiaodong #tsinghua _org _cn   http://stid.blogchina.com/
+   wuler.lv    (wuler.lv #gmail _com)          [Wuler Lv]
+   xnuxmwx     (xnuxmwx #gmail _com)           [Man Xu]     http://www.tanvy.com/
+   namespace #yeah _net
+   leftstand #chinaacc _com
+
+The following contributors had contributed for the development of 
+CJK Extension A bitmaps:
+
+   MarkLam     (mark.jlam#gmail_com)
+   twang467    (twang467#21cn_com)             [Qiang Wang]
+   buick       (weiyiwei#gmail_com)            [Yiwei Wei]
+   liqian      
+   qinling     (qin_ling#sohu_com)             http://qinling.bokee.com
+   Seeker      (seeker#yeah_net)
+   xiaoma      (mayueping#gmail_com)
+   ZaiJianQingRen (abc010203xyz#163_com)
+   SiCengXiangShi (liyulongmen#yahoo_com_cn)
+   the_owl     (weitao1979#gmail_com )
+   whppc       (lyons.chang#gmail_com)
+   eka         (ekapie#googlemail_com)
+   failsafe    (simon.youngest#gmail_com) MSN:failsafenow@hotmail.com
+   musiccow    (blkatbyhh#gmail_com)      http://my.opera.com/musiccow
+   Blueelf     (yshen#fas_harvard_edu) http://bbs.dartmouth.edu/web/yinghua/
+   lenovox     (lenovox#126_com) 
+   fourbrow    (fourbrow#163_com)
+   udi         (udisaar#gmail_com)
+   leal        (linxiao.li#gmail_com)     http://www.leal.cn
+   soicer      (soicer#gmail_com)         http://www.qianxinlei.com
+   xuande      (liu.i3655#gmail_com)       [liu bei]
+
+If your name is missing, please send an email to fangqq #nmr _mgh _harvard _edu
+I will add you to the list for all subsequent releases. Please forgive me
+for the mistake (if there is any) due to tight release schedule.
+
+3. Donation Providers
+
+   We sincerely appreciate the generous donation provided from 
+multiple friends, their donations not only support the project
+to grow healthly, but also encourage all the developers. A list 
+of supporters can be found at
+
+   http://wenq.org/index.cgi?Donation
+
+[in particular, we want to give our thanks to Gang Chang (AnyChina) 
+for donating 9 internet domain names, and Kaitong Wang for donating
+fund. ]
+----------------------------------------------------------
+
+
+ III. Author List for Job Partitions
+
+* We devided the CJK characters into 207 groups, in each group,
+there are 101 characters, where about 80 glyphs (in average) need 
+to be completed. The following list summarizes
+the author to each group and the corresponding reviewer.
+
+* The reviewer not only adjust the newly completed glyphs, in 
+most cases, they adjust the existing firefly bitmaps.
+
+* The time to complete one glyph ranges from half minute to 4 
+minutes depending on the experiences of the developer.
+
+* review level scale: L3 means very complete, L1 means very rough. 
+
+* formal review process is now replaced by online optimization
+  and nightly-built releases (May,20,2006)
+
+--------------------------------------------------
+  Group         Author           Level Reviewer
+--------------------------------------------------
+U+4E00~U+4E64   :anonymous:        L3  FangQ     
+U+4E65~U+4EC9   :anonymous:        L3  FangQ     
+U+4ECA~U+4F2E   niqiu              L3  FangQ     
+U+4F2F~U+4F93   FangQ              L3  FangQ     
+U+4F94~U+4FF8   pupilzeng          L3  FangQ     
+U+4FF9~U+505D   niqiu              L3  FangQ     
+U+505E~U+50C2   nilarcs            L3  FangQ     
+U+50C3~U+5127   achaoge/FangQ      L3  FangQ     
+U+5128~U+518C   anonyous           L3  tchaikov  
+U+518D~U+51F1   FangQ              L3  tchaikov  
+U+51F2~U+5256   fundawang          L3  FangQ     
+U+5257~U+52BB   FangQ/shhky        L3  Caiqian   
+U+52BC~U+5320   :anonymous:        L3  Caiqian   
+U+5321~U+5385   FangQ              L3  tchaikov  
+U+5386~U+53EA   FangQ              L3  tchaikov  
+U+53EB~U+544F   amadeoh/FangQ      L3  wanghong  
+U+5450~U+54B4   :anonymous:        L3  tchaikov  
+U+54B5~U+5519   FangQ              L3  tchaikov  
+U+551A~U+557E   :anonymous:        L3  FangQ     
+U+557F~U+55E3   FangQ              L3  FangQ     
+U+55E4~U+5648   :anonymous:        L3  wanghong  
+U+5649~U+56AD   FangQ              L3  wanghong  
+U+56AE~U+5712   vertex/FangQ       L3  FangQ     
+U+5713~U+5777   xnuxmwx            L3  FangQ     
+U+5778~U+57DC   wanghong           L3  FangQ     
+U+57DD~U+5841   FangQ              L3  tchaikov  
+U+5842~U+58A6   fundawang          L3  tchaikov  
+U+58A7~U+590B   :anonymous:        L1  FangQ     
+U+590C~U+5970   FangQ              L1  FangQ     
+U+5971~U+59D5   wanghong           L1  FangQ     
+U+59D6~U+5A3A   :anonymous:        L1  FangQ     
+U+5A3B~U+5A9F   brep)              L3  FangQ     
+U+5AA0~U+5B04   :anonymous:        L1  FangQ     
+U+5B05~U+5B69   pinker)            L1  FangQ     
+U+5B6A~U+5BCE   fundawang          L1  FangQ     
+U+5BCF~U+5C33   fundawang)         L3  FangQ     
+U+5C34~U+5C98   fundawang)         L3  FangQ     
+U+5C99~U+5CFD   ailantian          L3  FangQ     
+U+5CFE~U+5D62   :anonymous:        L1  FangQ     
+U+5D63~U+5DC7   :anonymous:        L1  FangQ     
+U+5DC8~U+5E2C   :anonymous:        L1  FangQ     
+U+5E2D~U+5E91   chaoslawful        L3  FangQ     
+U+5E92~U+5EF6   brep               L3  FangQ     
+U+5EF7~U+5F5B   xnuxmwx            L3  FangQ     
+U+5F5C~U+5FC0   FangQ              L3  wanghong  
+U+5FC1~U+6025   keykeen            L3  wanghong  
+U+6026~U+608A   pangwa             L3  tchaikov  
+U+608B~U+60EF   :anonymous:        L3  tchaikov  
+U+60F0~U+6154   :anonymous:        L3  wanghong  
+U+6155~U+61B9   :anonymous:        L3  wanghong  
+U+61BA~U+621E   wanghong           L3  wanghong  
+U+621F~U+6283   FangQ              L3  wanghong  
+U+6284~U+62E8   brep               L3  tchaikov  
+U+62E9~U+634D   brep               L3  FangQ     
+U+634E~U+63B2   FangQ              L3  tchaikov  
+U+63B3~U+6417   :anonymous:        L3  tchaikov  
+U+6418~U+647C   :anonymous:        L1  FangQ     
+U+647D~U+64E1   wanghong           L1  FangQ     
+U+64E2~U+6546   wanghong           L1  FangQ     
+U+6547~U+65AB   :anonymous:        L1  FangQ     
+U+65AC~U+6610   keykeen            L1  FangQ     
+U+6611~U+6675   FangQ              L1  FangQ     
+U+6676~U+66DA   FangQ              L1  FangQ     
+U+66DB~U+673F   FangQ              L1  FangQ     
+U+6740~U+67A4   FangQ              L1  FangQ     
+U+67A5~U+6809   FangQ              L1  FangQ     
+U+680A~U+686E   activeion          L1  FangQ     
+U+686F~U+68D3   FangQ              L1  FangQ     
+U+68D4~U+6938   wanghong           L1  FangQ     
+U+6939~U+699D   wanghong           L1  FangQ     
+U+699E~U+6A02   wanghong           L1  FangQ     
+U+6A03~U+6A67   wanghong           L1  FangQ     
+U+6A68~U+6ACC   pinker             L1  FangQ     
+U+6ACD~U+6B31   FangQ              L1  FangQ     
+U+6B32~U+6B96   wanghong           L1  FangQ     
+U+6B97~U+6BFB   FangQ              L1  FangQ     
+U+6BFC~U+6C60   FangQ              L1  FangQ     
+U+6C61~U+6CC5   wuler.lv           L3  wanghong  
+U+6CC6~U+6D2A   wuler.lv           L3  wanghong  
+U+6D2B~U+6D8F   wanghong           L1  FangQ     
+U+6D90~U+6DF4   wanghong           L1  FangQ     
+U+6DF5~U+6E59   wanghong           L1  FangQ     
+U+6E5A~U+6EBE   wanghong           L1  FangQ     
+U+6EBF~U+6F23   wanghong           L1  FangQ     
+U+6F24~U+6F88   wanghong           L2  wanghong  
+U+6F89~U+6FED   wanghong           L3  tchaikov  
+U+6FEE~U+7052   wanghong           L3  tchaikov  
+U+7053~U+70B7   wanghong           L3  tchaikov  
+U+70B8~U+711C   wanghong           L3  wanghong  
+U+711D~U+7181   wanghong           L3  wanghong  
+U+7182~U+71E6   wanghong           L3  tchaikov  
+U+71E7~U+724B   wanghong           L3  tchaikov  
+U+724C~U+72B0   wanghong           L3  tchaikov  
+U+72B1~U+7315   wanghong           L3  tchaikov  
+U+7316~U+737A   wanghong           L3  tchaikov  
+U+737B~U+73DF   wanghong           L3  tchaikov  
+U+73E0~U+7444   wanghong           L3  tchaikov  
+U+7445~U+74A9   wanghong           L3  tchaikov  
+U+74AA~U+750E   wanghong           L3  tchaikov  
+U+750F~U+7573   wanghong           L3  tchaikov  
+U+7574~U+75D8   wanghong           L3  tchaikov  
+U+75D9~U+763D   wanghong           L3  tchaikov  
+U+763E~U+76A2   wanghong           L3  tchaikov  
+U+76A3~U+7707   wanghong           L3  tchaikov  
+U+7708~U+776C   wanghong           L3  tchaikov  
+U+776D~U+77D1   wanghong           L3  tchaikov  
+U+77D2~U+7836   keykeen            L3  tchaikov  
+U+7837~U+789B   keykeen            L3  tchaikov  
+U+789C~U+7900   keykeen            L3  tchaikov  
+U+7901~U+7965   keykeen            ??  tchaikov  
+U+7966~U+79CA   keykeen            ??  tchaikov  
+U+79CB~U+7A2F   pathfinder         ??  tchaikov  
+U+7A30~U+7A94   wanghong           ??  tchaikov  
+U+7A95~U+7AF9   wanghong           (not done yet)
+U+7AFA~U+7B5E   xnuxmwx            (not done yet)
+U+7B5F~U+7BC3   keykeen            (not done yet)
+U+7BC4~U+7C28   keykeen/FangQ      (not done yet)
+U+7C29~U+7C8D   FangQ              (not done yet)
+U+7C8E~U+7CF2   FangQ/LiuQingyan   (not done yet)
+U+7CF3~U+7D57   keykeen            (not done yet)
+U+7D58~U+7DBC   chaoslawful        (not done yet)
+U+7DBD~U+7E21   tchaikov           (not done yet)
+U+7E22~U+7E86   liyi               (not done yet)
+U+7E87~U+7EEB   brep               (not done yet)
+U+7EEC~U+7F50   FangQ              (not done yet)
+U+7F51~U+7FB5   FangQ              (not done yet)
+U+7FB6~U+801A   brep               (not done yet)
+U+801B~U+807F   liyi               (not done yet)
+U+8080~U+80E4   tchaikov           (not done yet)
+U+80E5~U+8149   ailantian          (not done yet)
+U+814A~U+81AE   lucifer            (not done yet)
+U+81AF~U+8213   keykeen            (not done yet)
+U+8214~U+8278   keykeen            (not done yet)
+U+8279~U+82DD   caiqian            (not done yet)
+U+82DE~U+8342   wanghong           (not done yet)
+U+8343~U+83A7   keykeen            (not done yet)
+U+83A8~U+840C   keykeen            (not done yet)
+U+840D~U+8471   keykeen            (not done yet)
+U+8472~U+84D6   wanghong           (not done yet)
+U+84D7~U+853B   BabyPBC            (not done yet)
+U+853C~U+85A0   BabyPBC            (not done yet)
+U+85A1~U+8605   FangQ              (not done yet)
+U+8606~U+866A   tchaikov           (not done yet)
+U+866B~U+86CF   keykeen            (not done yet)
+U+86D0~U+8734   ailantian          (not done yet)
+U+8735~U+8799   wanghong           (not done yet)
+U+879A~U+87FE   chaoslawful        (not done yet)
+U+87FF~U+8863   wanghong           (not done yet)
+U+8864~U+88C8   lucifer            (not done yet)
+U+88C9~U+892D   lucifer            (not done yet)
+U+892E~U+8992   wanghong           (not done yet)
+U+8993~U+89F7   wanghong           (not done yet)
+U+89F8~U+8A5C   ailantian          (not done yet)
+U+8A5D~U+8AC1   ailantian          (not done yet)
+U+8AC2~U+8B26   ailantian          (not done yet)
+U+8B27~U+8B8B   wanghong           (not done yet)
+U+8B8C~U+8BF0   stid               (not done yet)
+U+8BF1~U+8C55   wanghong           (not done yet)
+U+8C56~U+8CBA   wanghong           (not done yet)
+U+8CBB~U+8D1F   pinker             (not done yet)
+U+8D20~U+8D84   brep               (not done yet)
+U+8D85~U+8DE9   ailantian          (not done yet)
+U+8DEA~U+8E4E   ailantian          (not done yet)
+U+8E4F~U+8EB3   tchaikov           (not done yet)
+U+8EB4~U+8F18   wanghong           (not done yet)
+U+8F19~U+8F7D   wanghong           L3  FangQ     
+U+8F7E~U+8FE2   chaoslawful        L3  FangQ     
+U+8FE3~U+9047   keykeen            L3  FangQ     
+U+9048~U+90AC   keykeen            L3  FangQ     
+U+90AD~U+9111   wanghong           L3  FangQ     
+U+9112~U+9176   nilarcs            L3  wanghong  
+U+9177~U+91DB   wanghong           L3  wanghong  
+U+91DC~U+9240   wanghong           L3  wanghong  
+U+9241~U+92A5   lucifer            ??  wanghong  
+U+92A6~U+930A   FangQ              ??  wanghong  
+U+930B~U+936F   FangQ              ??  wanghong  
+U+9370~U+93D4   wanghong           ??  wanghong  
+U+93D5~U+9439   FangQ              (not done yet)
+U+943A~U+949E   chaoslawful        (not done yet)
+U+949F~U+9503   wanghong           (not done yet)
+U+9504~U+9568   wanghong           (not done yet)
+U+9569~U+95CD   Yei                (not done yet)
+U+95CE~U+9632   FangQ              (not done yet)
+U+9633~U+9697   wanghong           (not done yet)
+U+9698~U+96FC   wanghong           (not done yet)
+U+96FD~U+9761   wanghong           (not done yet)
+U+9762~U+97C6   wanghong           (not done yet)
+U+97C7~U+982B   wanghong           (not done yet)
+U+982C~U+9890   wanghong           (not done yet)
+U+9891~U+98F5   wanghong           (not done yet)
+U+98F6~U+995A   FangQ              (not done yet)
+U+995B~U+99BF   wanghong           (not done yet)
+U+99C0~U+9A24   wanghong           (not done yet)
+U+9A25~U+9A89   wanghong           (not done yet)
+U+9A8A~U+9AEE   wanghong           (not done yet)
+U+9AEF~U+9B53   wanghong           (not done yet)
+U+9B54~U+9BB8   FangQ              L3  wanghong  
+U+9BB9~U+9C1D   FangQ              L3  wanghong  
+U+9C1E~U+9C82   FangQ              ??  wanghong  
+U+9C83~U+9CE7   wanghong           L1  wanghong  
+U+9CE8~U+9D4C   wanghong           L3  wanghong  
+U+9D4D~U+9DB1   FangQ              L2  wanghong  
+U+9DB2~U+9E16   wanghong           L3  wanghong  
+U+9E17~U+9E7B   wanghong           L3  wanghong  
+U+9E7C~U+9EE0   wanghong           L1  wanghong  
+U+9EE1~U+9F45   wanghong           L3  wanghong  
+U+9F46~U+9FAA   albert liu/FangQ   L3  wanghong  
+----------------------------------------------------------
+
+ IV. Other resources
+
+Webspace provider:
+
+     Qianqian Fang[FangQ] provided his personal owned webspace for 
+                   the project: http://wenq.org/
+     Shanyuan Gao[adungaos] provided CERNET mirror web space at
+                   http://wqy.lwfs.net/ and http://lwfs.net/cgi-bin/
+     Sourceforge provided free webspace and great tools to help
+                   the development: http://sf.net/
+     Dartmouth Chinese Student&Scholar Association (DCSSA) 
+                   provided webspace for holding the pictures
+                   of each character (which is huge)
+
+Wiki development:
+
+     Qianqian Fang developed the wiki cgi program for the project
+     which is built on TtHWiki writen by Andreas Bilger. TtHWiki is 
+     modified from UseModWiki writen by Clifford Adams
+
+     The font editor was writen by Qianqian Fang based on 
+     Peter Occil(poccil #yahoo _com)'s minesweeper script.
+
+     The font editor previewer is written by Chai Kov
+     (tchaikov #sjtu _edu _cn)
+
+========================================================== 
+
+$Id: Dou_CREDIT Rev. 0 2006/5/19 20:20:20 qianqianfang Exp$

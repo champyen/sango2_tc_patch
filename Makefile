@@ -2,15 +2,17 @@ CC=gcc
 CHS_ROM=sango2_chs.nes
 
 # UTF-16 16x16 FONTS
-FONT16=fonts_16x16/unifont/unifont-16.0.04.bdf
-L_CHAR_LIST=large_char_list_u16.txt
-BIG5_FLAG=
+#FONT16=fonts_16x16/unifont/unifont-16.0.04.bdf
+#FONT16=fonts_16x16/cmexfonts/cmex16m.bdf
+#FONT16=fonts_16x16/uni16m/uni16m.bdf
+#L_CHAR_LIST=large_char_list_u16.txt
+#BIG5_FLAG=
 
 # BIG5 16x16 FONTS
 #FONT16=fonts_16x16/taipei16/taipei16_fix.bdf
-#FONT16=fonts_16x16/kcfonts/kc15f_fix.bdf
-#L_CHAR_LIST=large_char_list_big5.txt
-#BIG5_FLAG=-5
+FONT16=fonts_16x16/kcfonts/kc15f_fix.bdf
+L_CHAR_LIST=large_char_list_big5.txt
+BIG5_FLAG=-5
 
 CH_NUM=chinese_num.bin
 
@@ -74,4 +76,4 @@ clean_roms:
 	rm -rf sango2_cht_cubic* sango2_cht_firefly* sango2_cht_fusion* sango2_cht_zpix* sango2_cht_fireflyR12.nes sango2_cht_wqy.nes
 
 clean_tabs:
-	rm -f char_list_u16.txt replace_u16.txt large_char_list_big5.txt
+	rm -f char_list_u16.txt replace_u16.txt large_char_list_*.txt

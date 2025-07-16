@@ -1,0 +1,66 @@
+$Id: WQY_Dou_ChangeLog 0.7 Rev. 0 2006/5/20 20:20:20 qianqianfang Exp$
+========================================================== 
+
+               Wen Quan Yi Bitmap Song 
+
+                     ChangeLog
+----------------------------------------------------------
+
+WenQuanYi Bitmap Song ChangeLog:
+
+2006/5/21(0.7.0): 
+          1. about 541 glyphs of the most frequently used 
+             characters have been optimized since 0.6.9
+          2. Latin glyphs were also improved significantly
+          3. font baseline positions and underline positions
+             were adjusted
+          4. TTF format (sbit only TTF) is now provided
+          5. more detailed installation instructions were added
+             to the document
+
+2006/3/19(0.6.9): 
+          1. removed all YanHuang GBK Bitmap fonts(the 12pt 
+             face of previous releases), replaced with 12pt 
+             GB2312 font by Chinese Academia Sinica and
+             HabianCJK Project public domain fonts.
+          2. dramatic improvement of the most frequently
+             used characters for all other pixels sizes,
+             the font quality is as good as commertial fonts.
+          3. Latin characeters were adjusted, especially 
+             the spacings
+          4. all glyphs in 9/10/11pt fonts were moved upward 
+             by 1px
+          5. provided two optional font sizes: 10.5pt and 14pt 
+             (medium and bold) in a separate package
+          6. used "Permission of font embedding clause" in GPL
+             v2.0 license. 
+
+2005/8/8 (release v0.6): 
+
+          1. extensive improvement on the most frequently 
+             used Chinese characters (simplified/traditional),
+             more than ten thousands of glyphs were adjusted
+             and re-drawn.
+          2. redesigned the Latin letters and digits
+          3. Hangul glyphs now support both medium and bold faces
+          4. move 12pt Chinese glyphs downward by 2 pixels
+          5. correct font header information
+          6. included un-gzipped pcf and sfnt formats in the release
+             for faster glyph rendering
+          7. corrected a bug in the bolding algorithm, 
+             regenerated all bold face CJK characters
+
+2005/6/25 (release v0.5, preview release): 
+          1. initial release, version 0.5
+          2. complete CJK Unified Ideographics glyphs
+             for 9/10/11/12 pt bitmap glyphs
+          3. improve more than 20,000 existing firefly
+             and Redflag bitmap
+          4. update English letters and numbers to Sans-Serif style
+          5. create bold font for the corresponding CJK 
+             characters
+          6. add Korean glyphs for 12pt font extracted from 
+             yhunifont(http://wqy.sourceforge.net/cgi-bin/index.cgi?yhunifont).
+
+========================================================== 
+$Id: WQY_Dou_ChangeLog 0.7 Rev. 0 2006/5/20 20:20:20 qianqianfang Exp$
