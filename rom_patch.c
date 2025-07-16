@@ -9,7 +9,7 @@ typedef struct {
     uint8_t bitmap[32];
 } bdf_char;
 
-enum {
+typedef enum {
     FONT_UTF16 = 0,
     FONT_BIG5 = 1,
 } font_encoding;
@@ -254,9 +254,11 @@ int main(int argc, char **argv)
     char *jrom_fn = NULL;
     char *rep_fn = NULL;
     char *out_fn = "sango2_cht_gen.nes";
+    char *num_fn = NULL;
+    font_encoding f16_enc = FONT_UTF16;
 
     int opt = -1;
-    while ((opt = getopt(argc, argv, "b:f:c:l:s:t:j:r:o:")) != -1) {
+    while ((opt = getopt(argc, argv, "b:f:c:l:s:t:j:r:o:n:5")) != -1) {
         switch (opt) {
         case 'b':
             bdf_fn = optarg;
@@ -282,14 +284,20 @@ int main(int argc, char **argv)
         case 'o':
             out_fn = optarg;
             break;
+        case 'n':
+            num_fn = optarg;
+            break;
+        case '5':
+            f16_enc = FONT_BIG5;
+            break;
         default: /* '?' */
-            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [ -j JP_ROM -r REPLACE_LIST -o OUT_FILE]\n", argv[0]);
+            fprintf(stderr, "Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [ -j JP_ROM -r REPLACE_LIST -n CHINESE_NUM -o OUT_FILE]\n", argv[0]);
             exit(EXIT_FAILURE);
         }
     }
 
     if(bdf_fn == NULL || charlist_fn == NULL || srom_fn == NULL){
-        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -r REPLACE_LIST -o OUT_FILE]\n", argv[0]);
+        printf("Usage: %s -b BDF_FONT -c CHAR_LIST_U16LE -s SC_ROM -t TC_ROM [-j JP_ROM -r REPLACE_LIST -n CHINESE_NUM -o OUT_FILE]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -314,14 +322,7 @@ int main(int argc, char **argv)
     }
     printf("parsing %s\n", bdf16_fn);
 
-// by default, we make use of kc15f or taipei16 BIG5 fonts,  glyphs look better
-#define BIG5_16X16 1
-#if BIG5_16X16
-    bdf_font fnt_16 = parse_bdf(bdf16_fp, FONT_BIG5, 16);
-#else
-// we can also make use of fireflyR16 or unifont UTF-16 fonts
-    bdf_font fnt_16 = parse_bdf(bdf16_fp, FONT_UTF16, 16);
-#endif
+    bdf_font fnt_16 = parse_bdf(bdf16_fp, f16_enc, 16);
     fclose(bdf16_fp);
 
     // Test
@@ -329,12 +330,12 @@ int main(int argc, char **argv)
     disp_CCHAR(fnt_11, 0x5DB2);
 
 
-#if BIG5_16X16
-    disp_C16CHAR(fnt_16, 0xBC42);
-#else
-    disp_C16CHAR(fnt_16, 0x5F67);
-    disp_C16CHAR(fnt_16, 0x8A61);
-#endif
+    if(f16_enc == FONT_BIG5) { 
+        disp_C16CHAR(fnt_16, 0xBC42);
+    } else {
+        disp_C16CHAR(fnt_16, 0x5F67);
+        disp_C16CHAR(fnt_16, 0x8A61);
+    }
 
     long rom_size = get_file_size(srom_fn);
     uint8_t *rom_data = malloc(rom_size);
@@ -403,46 +404,46 @@ int main(int argc, char **argv)
             printf("open %s failed\n", charlist_fn);
             exit(0);
         }
-#if BIG5_16X16
-        char *ptr = NULL;
-        while((ptr = fgets((char*)strbuf, MAX_LEN, charlist_fp)) != NULL){
-            //printf("%ls\n",strbuf);
-            long offset = strtol((char*)strbuf, NULL, 16);
-            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
-            //printf("offset=%lX, num=%ld\n", offset, num);
-            fgets((char*)strbuf, MAX_LEN, charlist_fp);
-            for(int i = 0; i < num; i++, offset+=0x20){
-                uint16_t charenc = 0;
-                charenc = strbuf[i*2] << 8 | strbuf[i*2+1];
-                //printf("enc:%X: %lX\n", charenc, offset);
-                uint8_t bitmap[32] = {0};
-                bdf16_to_rom(fnt_16, charenc, bitmap);
-                memcpy(rom_data + offset, bitmap, 32);
-            }
-            //printf("\n");
-        }
-#else
-        while(fread(strbuf, 1, 16, charlist_fp) == 16){
-            for(int i =0; i < 7; i++){
-                strbuf[i] = strbuf[2*i];
-            }
-            strbuf[8] = 0;
-            long offset = strtol((char*)strbuf, NULL, 16);
-            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
-            printf("offset=%lX, num=%ld\n", offset, num);
-            for(int i = 0; i < num; i++, offset+=0x20){
-                uint16_t charenc = 0;
-                fread(&charenc, 1, 2, charlist_fp);
+	    if(f16_enc == FONT_BIG5) { 
+	        char *ptr = NULL;
+	        while((ptr = fgets((char*)strbuf, MAX_LEN, charlist_fp)) != NULL){
+	            //printf("%ls\n",strbuf);
+	            long offset = strtol((char*)strbuf, NULL, 16);
+	            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
+	            //printf("offset=%lX, num=%ld\n", offset, num);
+	            fgets((char*)strbuf, MAX_LEN, charlist_fp);
+	            for(int i = 0; i < num; i++, offset+=0x20){
+	                uint16_t charenc = 0;
+	                charenc = strbuf[i*2] << 8 | strbuf[i*2+1];
+	                //printf("enc:%X: %lX\n", charenc, offset);
+	                uint8_t bitmap[32] = {0};
+	                bdf16_to_rom(fnt_16, charenc, bitmap);
+	                memcpy(rom_data + offset, bitmap, 32);
+	            }
+	            //printf("\n");
+	        }
+	     } else {
+	        while(fread(strbuf, 1, 16, charlist_fp) == 16){
+	            for(int i =0; i < 7; i++){
+	                strbuf[i] = strbuf[2*i];
+	            }
+	            strbuf[8] = 0;
+	            long offset = strtol((char*)strbuf, NULL, 16);
+	            long num = strtol(strchr((char*)strbuf, ',')+1, NULL, 16)+1;
+	            printf("offset=%lX, num=%ld\n", offset, num);
+	            for(int i = 0; i < num; i++, offset+=0x20){
+	                uint16_t charenc = 0;
+	                fread(&charenc, 1, 2, charlist_fp);
 
-                printf("enc:%X: %lX\n", charenc, offset);
-                uint8_t bitmap[32] = {0};
-                bdf16_to_rom(fnt_16, charenc, bitmap);
-                memcpy(rom_data + offset, bitmap, 32);
-            }
-            fread(strbuf, 1, 2, charlist_fp);
-            //printf("\n");
-        }
-#endif
+	                printf("enc:%X: %lX\n", charenc, offset);
+	                uint8_t bitmap[32] = {0};
+	                bdf16_to_rom(fnt_16, charenc, bitmap);
+	                memcpy(rom_data + offset, bitmap, 32);
+	            }
+	            fread(strbuf, 1, 2, charlist_fp);
+	            //printf("\n");
+	        }
+	    }
         fclose(charlist_fp);
     }
 
@@ -453,6 +454,17 @@ int main(int argc, char **argv)
             exit(0);
         }
         replace_words(rep_fp, u16_to_rom, rom_data, rom_size);
+        fclose(rep_fp);
+    }
+
+    if(num_fn != NULL) {
+        FILE *num_fp = fopen(num_fn, "r");
+        if(num_fp == NULL) {
+            printf("open %s failed\n", rep_fn);
+            exit(0);
+        }
+        fread(rom_data + 0x1D410, 1, 80, num_fp);
+        fclose(num_fp);
     }
 
     FILE *out_romfp = fopen(out_fn, "wb");
