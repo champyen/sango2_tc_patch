@@ -16,7 +16,7 @@ int bdf_fix(FILE *fp_in, FILE *fp_out)
             if(strstr(strbuf, "ENCODING")){
                 char *idx_p = &(strbuf[9]);
                 char_idx = strtol(idx_p, NULL, 10);
-                if(char_idx >= 0x8140 && char_idx < 0xF9D5){
+                if(char_idx >= 0x8140 && char_idx < 0xF9E0){
                     break;
                 }
             }

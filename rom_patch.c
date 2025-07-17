@@ -30,7 +30,7 @@ void font_init(bdf_font *fnt, int enc, int size)
     switch(enc){
         case FONT_BIG5:
             fnt->start = 0x8140;
-            fnt->end = 0xF9D5;
+            fnt->end = 0xF9E0;
             break;
         case FONT_UTF16:
         default:
@@ -331,7 +331,7 @@ int main(int argc, char **argv)
 
 
     if(f16_enc == FONT_BIG5) { 
-        disp_C16CHAR(fnt_16, 0xBC42);
+        disp_C16CHAR(fnt_16, 0xF9DA);
     } else {
         disp_C16CHAR(fnt_16, 0x5F67);
         disp_C16CHAR(fnt_16, 0x8A61);
