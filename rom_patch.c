@@ -210,6 +210,9 @@ void replace_words(FILE *fp, uint16_t *u2r, uint8_t *rom_data, int rom_size)
             rep_len += (rom_char < 0xE0 ? 1 : 2);
         }
 
+        if(orig_len == 0 || rep_len == 0)
+        	break;
+
         int rep_cnt = 0;
         if( orig_len == rep_len ) {
             for(int i = 0; i < rom_size; i++){
