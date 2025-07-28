@@ -7,6 +7,7 @@
 
 typedef struct {
     uint8_t bitmap[32];
+    int init;
 } bdf_char;
 
 typedef enum {
@@ -91,6 +92,9 @@ void bdf_to_rom(bdf_font fnt, int char_idx, uint8_t *dst)
 {
     bdf_char *table = fnt.table;
     uint8_t* font = (uint8_t*)(table[char_idx - fnt.start].bitmap);
+    if(table[char_idx - fnt.start].init == 0){
+    	printf("Font file doesn't provide char %4X\n", char_idx);
+    }
     for(int y = 0 ; y < 11; y++){
         for(int x = 0; x < 11; x++){
 
@@ -156,6 +160,7 @@ bdf_font parse_bdf(FILE *fp, int enc, int size)
                     table[tab_idx].bitmap[y*2] = (char_line >> 8) & 0xFF;
                     table[tab_idx].bitmap[y*2+1] = char_line & 0xFF;
                 }
+                table[tab_idx].init = 1;
             }else{
                 printf("strange idx %X [%lX]\n", tab_idx, char_idx);
             }
