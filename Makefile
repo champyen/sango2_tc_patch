@@ -15,6 +15,7 @@ L_CHAR_LIST=large_char_list_big5.txt
 BIG5_FLAG=-5
 
 CH_NUM=chinese_num.bin
+RGSS_CHT=rgss_cht.bin
 
 
 all: font_view font16_ext rom_patch bdf_fix msg_dump bdf_fix bdf16_fix
@@ -43,19 +44,19 @@ msg_dump: msg_dump.c
 
 
 sango2_cht_zpix.nes: rom_patch char_list_u16.txt replace_u16.txt $(L_CHAR_LIST)
-	./rom_patch -b fonts_11x11/zpix/zpix.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -o $@
+	./rom_patch -b fonts_11x11/zpix/zpix.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -t $(RGSS_CHT) -o $@
 
 sango2_cht_cubic.nes: rom_patch char_list_u16.txt replace_u16.txt $(L_CHAR_LIST)
-	./rom_patch -b fonts_11x11/cubic/cubic11_11_80.bdf -f $(FONT16)  -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -o $@
+	./rom_patch -b fonts_11x11/cubic/cubic11_11_80.bdf -f $(FONT16)  -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -t $(RGSS_CHT) -o $@
 
 sango2_cht_fusion.nes: rom_patch char_list_u16.txt replace_u16.txt $(L_CHAR_LIST)
-	./rom_patch -b fonts_11x11/fusion/fusion-pixel-11px-monospaced-zh_hant.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -o $@
+	./rom_patch -b fonts_11x11/fusion/fusion-pixel-11px-monospaced-zh_hant.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -t $(RGSS_CHT) -o $@
 
 sango2_cht_fireflyR12.nes: rom_patch char_list_u16.txt replace_u16.txt $(L_CHAR_LIST)
-	./rom_patch -b fonts_11x11/firefly/fireflyR12.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -o $@
+	./rom_patch -b fonts_11x11/firefly/fireflyR12.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -t $(RGSS_CHT) -o $@
 
 sango2_cht_wqy.nes: rom_patch char_list_u16.txt replace_u16.txt $(L_CHAR_LIST)
-	./rom_patch -b fonts_11x11/wqy/wqysong9.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -o $@
+	./rom_patch -b fonts_11x11/wqy/wqysong9.bdf -f $(FONT16) -c char_list_u16.txt -l $(L_CHAR_LIST) $(BIG5_FLAG) -s $(CHS_ROM) -r replace_u16.txt -n $(CH_NUM) -t $(RGSS_CHT) -o $@
 
 char_list_u16.txt: char_list.txt
 	iconv -f UTF-8 -t UTF-16LE $< > $@

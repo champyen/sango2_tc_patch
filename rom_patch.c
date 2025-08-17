@@ -263,10 +263,11 @@ int main(int argc, char **argv)
     char *rep_fn = NULL;
     char *out_fn = "sango2_cht_gen.nes";
     char *num_fn = NULL;
+    char *rgss_fn = NULL;
     font_encoding f16_enc = FONT_UTF16;
 
     int opt = -1;
-    while ((opt = getopt(argc, argv, "b:f:c:l:s:t:j:r:o:n:5")) != -1) {
+    while ((opt = getopt(argc, argv, "b:f:c:l:s:t:j:r:o:n:t:5")) != -1) {
         switch (opt) {
         case 'b':
             bdf_fn = optarg;
@@ -294,6 +295,9 @@ int main(int argc, char **argv)
             break;
         case 'n':
             num_fn = optarg;
+            break;
+        case 't':
+            rgss_fn = optarg;
             break;
         case '5':
             f16_enc = FONT_BIG5;
@@ -466,13 +470,23 @@ int main(int argc, char **argv)
     }
 
     if(num_fn != NULL) {
-        FILE *num_fp = fopen(num_fn, "r");
+        FILE *num_fp = fopen(num_fn, "rb");
         if(num_fp == NULL) {
             printf("open %s failed\n", rep_fn);
             exit(0);
         }
         fread(rom_data + 0x1D410, 1, 80, num_fp);
         fclose(num_fp);
+    }
+
+    if(rgss_fn != NULL) {
+        FILE *rgss_fp = fopen(rgss_fn, "rb");
+        if(rgss_fp == NULL) {
+            printf("open %s failed\n", rep_fn);
+            exit(0);
+        }
+        fread(rom_data + 0x37D60, 1, 80, rgss_fp);
+        fclose(rgss_fp);
     }
 
     FILE *out_romfp = fopen(out_fn, "wb");
