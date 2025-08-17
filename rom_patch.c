@@ -463,30 +463,30 @@ int main(int argc, char **argv)
         FILE *rep_fp = fopen(rep_fn, "r");
         if(rep_fp == NULL) {
             printf("open %s failed\n", rep_fn);
-            exit(0);
+        } else { 
+          replace_words(rep_fp, u16_to_rom, rom_data, rom_size);
+          fclose(rep_fp);
         }
-        replace_words(rep_fp, u16_to_rom, rom_data, rom_size);
-        fclose(rep_fp);
     }
 
     if(num_fn != NULL) {
         FILE *num_fp = fopen(num_fn, "rb");
         if(num_fp == NULL) {
-            printf("open %s failed\n", rep_fn);
-            exit(0);
+            printf("open %s failed\n", num_fn);
+        } else {
+            fread(rom_data + 0x1D410, 1, 80, num_fp);
+            fclose(num_fp);
         }
-        fread(rom_data + 0x1D410, 1, 80, num_fp);
-        fclose(num_fp);
     }
 
     if(rgss_fn != NULL) {
         FILE *rgss_fp = fopen(rgss_fn, "rb");
         if(rgss_fp == NULL) {
-            printf("open %s failed\n", rep_fn);
-            exit(0);
+            printf("open %s failed\n", rgss_fn);
+        } else {
+            fread(rom_data + 0x37D60, 1, 80, rgss_fp);
+            fclose(rgss_fp);
         }
-        fread(rom_data + 0x37D60, 1, 80, rgss_fp);
-        fclose(rgss_fp);
     }
 
     FILE *out_romfp = fopen(out_fn, "wb");
